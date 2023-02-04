@@ -16,22 +16,22 @@ jobs:
           get-rollout-status: true
           resource-file-path: deployment.json
           resource-name: deployment/blue
-  create-service:
-    docker:
-      - image: 'cimg/python:3.10'
-    parameters:
-      cluster-name:
-        description: |
-          Name of the EKS cluster
-        type: string  
-    steps:
-      - checkout
-      - aws-eks/update-kubeconfig-with-authenticator:
-          cluster-name: << parameters.cluster-name >>
-          install-kubectl: true
-      - kubernetes/create-or-update-resource:
-          resource-file-path: service.json
-          resource-name: service/bluegreenlb
+  # create-service:
+  #   docker:
+  #     - image: 'cimg/python:3.10'
+  #   parameters:
+  #     cluster-name:
+  #       description: |
+  #         Name of the EKS cluster
+  #       type: string  
+  #   steps:
+  #     - checkout
+  #     - aws-eks/update-kubeconfig-with-authenticator:
+  #         cluster-name: << parameters.cluster-name >>
+  #         install-kubectl: true
+  #     - kubernetes/create-or-update-resource:
+  #         resource-file-path: service.json
+  #         resource-name: service/bluegreenlb
 
 orbs:
   aws-eks: circleci/aws-eks@2.2.0
@@ -40,15 +40,16 @@ version: 2.1
 workflows:
   deployment:
     jobs:
-      - create-service:
+      - aws-eks/create-cluster:
           cluster-name: eks-demo-deployment
       - create-deployment:
           cluster-name: eks-demo-deployment
           requires:
-            - create-service
+            - aws-eks/create-cluster
       - aws-eks/update-container-image:
           cluster-name: eks-demo-deployment
           container-image-updates: 'blue=andresaaap/testblueimage:latest'
+
           requires:
             - create-deployment
-          resource-name: deployment/blue
+          resource-name: ddeployment/blue          
