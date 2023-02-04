@@ -14,8 +14,8 @@ jobs:
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
-          resource-file-path: deployment.json
-          resource-name: deployment/blue
+          resource-file-path: deployment.yaml
+          resource-name: deployment/deployment
   # create-service:
   #   docker:
   #     - image: 'cimg/python:3.10'
