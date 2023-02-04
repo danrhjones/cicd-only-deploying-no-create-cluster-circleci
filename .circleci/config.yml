@@ -41,15 +41,14 @@ workflows:
   deployment:
     jobs:
       - aws-eks/create-cluster:
-          cluster-name: eks-demo-deployment
+          cluster-name: eks-demo-deployment1
       - create-deployment:
-          cluster-name: eks-demo-deployment
+          cluster-name: eks-demo-deployment1
           requires:
             - aws-eks/create-cluster
       - aws-eks/update-container-image:
-          cluster-name: eks-demo-deployment
+          cluster-name: eks-demo-deployment1
           container-image-updates: 'blue=andresaaap/testblueimage:latest'
-
           requires:
             - create-deployment
-          resource-name: ddeployment/blue          
+          resource-name: ddeployment/blue
